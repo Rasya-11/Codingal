@@ -1,0 +1,12 @@
+body{font-family: 'Times New Roman', Times, serif; background-color: pink; color: yellow;}
+h1{color: aqua;}
+a{color: red;}
+a:hover{color: purple;}
+ul>li{font-weight: 500;}
+h1+p{background-color: blueviolet; padding-left: 10px;}
+ul li:hover{color: bisque;}
+ul li:nth-child(3){ background-color: green;}
+p:not{:first-of-type }text-decoration: underline;
+ul li::before{content:"🛰";}
+a::after{content:"💫";}
+p::first-letter{font-size: 200%; color: green;}
