@@ -1,0 +1,7 @@
+body{font-family: 'Times New Roman', Times, serif; background-color: beige; color: navy;}
+h1{color: purple;}
+ul>li{font-weight: 500;}
+h1+p{background-color: blueviolet; padding-left: 10px;}
+ul li:hover{color: red;}
+p:not(:first-of-type) {text-decoration: dotted;}
+p::first-letter{font-size: 200%; color: orangered;}
