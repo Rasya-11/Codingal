@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<!-- Static: [Box1] [Box2] [Box3] (normal flow)
+
+Relative: [Box1] (shifted right but space kept) [Box2] [Box3]
+
+Absolute: [Box1][Box2][Box3] + One box floating at exact coordinates (ignores flow) -->
+<style>
+
+body {
+
+height: 2000px;
+
+}
+
+div {
+
+margin: 20px 0;
+
+padding: 10px;
+
+border: 3px solid #73AD21;
+
+width: 250px;
+
+background: lightyellow;
+
+}
+
+.relative {
+
+position: relative;
+
+left: 30px;
+
+}
+
+.absolute {
+
+position: absolute;
+
+top: 200px;
+
+left: 30px;
+
+background: lightcoral;
+
+}
+
+.fixed {
+
+position: fixed;
+
+top: 10px;
+
+right: 10px;
+
+background: lightblue;
+
+}
+
+.static {
+
+position: static;
+
+background: lightgreen;
+
+}
+
+.sticky {
+
+position: sticky;
+
+top: 0;
+
+background: orange;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>CSS Position Examples</h1>
+
+<p>Scroll the page to see how each behaves.</p>
+
+<div class="relative">Relative → moves 30px right but space is kept.</div>
+
+<div class="absolute">Absolute → placed 200px from top, 30px from left, no space left behind.</div>
+
+<div class="fixed">Fixed → always stays at top-right of screen, even when scrolling.</div>
+
+<div class="static">Static → default, stays in normal flow.</div>
+
+<div class="sticky">Sticky → scroll down, this will stick to top when it reaches there.</div>
+
+<p style="margin-top:1000px;">Keep scrolling… Sticky box stops sticking when parent ends.</p>
+
+</body>
+
+</html>
