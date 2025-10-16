@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {height: 3000px;}
+            div {margin: 10px 0; padding: 20px; border: 5px solid brown; width: 300px; background: yellow;}
+            .relative {position: relative; left: 50px;}
+            .absolute {position: absolute; top: 100px; left: 20px; background: pink;}
+            .fixed {position: fixed; top: 50px; right: 60px; background: red;}
+            .static {position: static; background: green;}
+            .sticky {position: sticky; top: 0; background: purple;}
+        </style>
+    </head>
+    <body>
+        <h1>Positioning Homework</h1>
+        <p>Scroll the page to see how each behaves.</p>
+        <div class="relative">Relative → moves 30px right but space is kept.</div>
+        <div class="absolute">Absolute → placed 200px from top, 30px from left, no space left behind.</div>
+        <div class="fixed">Fixed → always stays at top-right of screen, even when scrolling.</div>
+        <div class="static">Static → default, stays in normal flow.</div>
+        <div class="sticky">Sticky → scroll down, this will stick to top when it reaches there.</div>
+        <p style="margin-top:1000px;">Keep scrolling… Sticky box stops sticking when parent ends.</p>
+    </body>
+    </html>
