@@ -1,0 +1,22 @@
+<!-- Learn about arguments objects and find the biggest number in the given argument. -->
+ <!DOCTYPE html>
+<html>
+    <body>
+        <h1> Javascript Argument Objects </h1>
+        <p> Finding the largest number using argument object. </p>
+        <p id="demo"></p>
+        <script>
+            function findMax(){
+                var i;
+                var max = 0;
+                for(i=0; i<arguments.length; i++){
+                    if(arguments[i]>max){
+                        max = arguments[i];
+                    }
+                }
+                return max;
+            }
+            document.getElementById("demo").innerHTML = findMax(3,6,4)
+        </script>
+    </body>
+</html>
