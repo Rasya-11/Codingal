@@ -1,14 +1,49 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Slider Homework </title>
+        <title> Carousel Homework </title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style>
+            body {position: relative;}
+            p {font-size: 18px;}
+            #section1 {padding-top:50px;height:500px;color: white; background-color: darkblue;}
+            #section2 {padding-top:50px;height:500px;color: Dark darkblue; background-color: white;}
+        </style>
     </head>
-    <body>
+    <body data-spy="scroll" data-target=".navbar" data-offset="50">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">VS Code</a>
+                </div>
+            <div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="#section1"> Visual Studio Code </a></li>
+                    <li><a href="#section2"> The Founder </a></li>
+                </ul>
+            </div>
+            </div>
+            </div>
+        </nav>
+        <div id="section1" class="container-fluid">
+            <h1>VS Code</h1>
+            <h5>Microsoft Visual Studio Code is a free, powerful, lightweight code editor for Windows, macOS and Linux.</h6>
+            <p></p>
+        </div>
+        <div id="section2" class="container-fluid">
+            <h1> The founder </h1>
+            <h3>Erich Gamma is the founder of VS Code.</h3>
+            <h3>It was released in April, 29, 2015</h3>
+        </div>
         <div class="container">
             <h1> Slider </h1>
             <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -19,13 +54,13 @@
                 </ol>
                 <div class="carousel-inner">
                     <div class="item active">
-                        <img src="Dog image.jpg" alt="Image 1">
+                        <p> Home </p>
                     </div>
                     <div class="item">
-                        <img src="flower1.jpg" alt="Image 2">
+                        <p> About </p>
                     </div>
                     <div class="item">
-                        <img src="flower2.jpg" alt="Penguin">
+                        <p> Contact </p>
                     </div>
                 </div>
                 <a class="left carousel-control" href="" data-slide="prev">
