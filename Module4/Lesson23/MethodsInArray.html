@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1> Javascript Array Mtheods </h1>
+        <p> The .join() method joins array elements into a string and the .pop() method removes the last item from the element. </p>
+        <p id="joinmethod"></p>
+        <p id="popmethod"></p>
+        <p id="popmethod2"></p>
+        <script>
+            var fruits = ['apples', 'bananas', 'grapes', 'kiwis']
+            document.getElementById("joinmethod").innerHTML = fruits.join("*");
+            document.getElementById("popmethod").innerHTML = fruits;
+            fruits.pop();
+            document.getElementById("popmethod2").innerHTML = fruits;
+        </script>
+    </body>
+</html>
