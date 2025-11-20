@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form Validation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    form {
+      display: inline-block;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+    input {
+      margin: 6px;
+      padding: 6px;
+      width: 200px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 6px 15px;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+  </head>
+  <body>
+    <h1>Real time form validation</h1>
+    <form id="loginform" onsubmit="validate(event)">
+      <label for="email"> Email </label> <br />
+      <input type="text" id="email" placeholder="Enter your email." /> <br />
+      <label for="password"> Password </label> <br />
+      <input type="password" id="password" placeholder="Enter your password." />
+      <br />
+      <label for="age"> Age </label> <br />
+      <input type="number" id="age" placeholder="Enter your age." /> <br />
+      <button type="submit">Login</button>
+    </form>
+    <p id="message"></p>
+    <script src="Form.js"></script>
+  </body>
+</html>
