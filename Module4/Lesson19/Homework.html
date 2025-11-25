@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1> Calculator </h1>
+        <p> Addition </p>
+        <p id="addition"></p>
+        <p> Subtraction </p>
+        <p id="subtraction"></p>
+        <p> Multiplication </p>
+        <p id="multiplication"></p>
+        <p> Division </p>
+        <p id="division"></p>
+        <script>
+            function add(x,y){
+                return x+y;
+            }
+            function minus(x,y){
+                return x-y;
+            }
+            function times(x,y){
+                return x*y;
+            }
+            function divide(x,y){
+                return x/y;
+            }
+            let Add = add(10,15);
+            let Minus = minus(10,15);
+            let Times = times(10,15);
+            let Divide = divide(10,15);
+            document.getElementById("addition").innerHTML = Add;
+            document.getElementById("subtraction").innerHTML = Minus;
+            document.getElementById("multiplication").innerHTML = Times;
+            document.getElementById("division").innerHTML = Divide;
+        </script>
+    </body>
+</html>
