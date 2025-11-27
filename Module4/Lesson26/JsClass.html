@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> JS Class </title>
+    </head>
+    <body>
+        <h1> Javascript Class </h1>
+        <p id="student1"></p>
+        <p id="student2"></p>
+        <script>
+            class students{
+                constructor(name,year){
+                    this.name = name;
+                    this.year = year;
+                }
+                //Creating age method for the class student
+                age(){
+                    let date = new Date();
+                    return date.getFullYear() - this.year;
+
+                }
+            }
+            // Using student class with two objects
+            student1 = new students("Ruby", 2015);
+            document.getElementById("student1").innerHTML = "student1 is " + student1.name + " age is " + student1.age();
+            student2 = new students("Adhya", 2016);
+            document.getElementById("student2").innerHTML = "student is " + student2.name + " age is " + student2.age();
+        </script>
+    </body>
+</html>

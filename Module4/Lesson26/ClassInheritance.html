@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Class Inheritance </title>
+    </head>
+    <body>
+        <h1> Javascript Class Inhertitance </h1>
+        <p> Use the "extense" keyword to inhertit all methods from another class. </p>
+        <p> Use the "super" method to call the parents constructure function. </p>
+        <p id="number"></p>
+        <script>
+            class car{
+                constructor(Brand){
+                    this.carname = Brand;
+                }
+                present(){
+                    return "I have a " + this.carname;
+                }
+            }
+            class model extends car{
+                constructor(Brand, model){
+                    super(Brand);
+                    this.model = model;
+                }
+                show(){
+                    return this.present() + ". It is a " + this.model;
+                }
+            }
+            let mycar = new model("Ford", "Mustang");
+            document.getElementById("number").innerHTML = mycar.show()
+        </script>
+    </body>
+</html>
