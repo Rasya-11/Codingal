@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1> Javascript Array Sort </h1>
+        <button onclick="ascending()"> Ascending Order </button>
+        <button onclick="descending()"> Descening Order </button>
+        <p id="demo"></p>
+        <script>
+           var points = [40,100,1,5,25]
+           var fruits = ["apple" , "grapes" , "banana"]
+           document.getElementById("demo").innerHTML = points;
+           function ascending(){
+            points.sort(function(a,b) {return a-b})
+            document.getElementById("demo").innerHTML = points;
+            // fruits.sort()
+            // document.getElementById("demo").innerHTML = fruits;
+           }
+           function descending(){
+            points.sort(function(a,b) {return b-a})
+            document.getElementById("demo").innerHTML = points;
+            // fruits.sort().reverse()
+            // document.getElementById("demo").innerHTML = fruits;
+           }
+        </script>
+    </body>
+</html>
