@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1> Javascript Error Handling </h1>
+        <p id="demo"></p>
+        <script>
+            // function callAlert(){
+                // return "hi"
+            // }
+           try {
+            callAlert()
+           }
+           catch(e) {
+            document.getElementById("demo").innerHTML = e.message;
+           }
+        </script>
+    </body>
+</html>
