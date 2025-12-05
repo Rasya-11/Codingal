@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Static Methods and Inheritance </title>
+    </head>
+    <body>
+        <h1>Javascript Static Methods and Inheritance</h1>
+
+        <p id="parentStatic"></p>
+        <p id="parentNonStatic"></p>
+        <p id="childStatic"></p>
+        <p id="childNonStatic"></p>
+
+        <script>
+            class Student {
+                constructor(name) {
+                    this.studentname = name;
+                }
+                static hello() {
+                    return "Hello from Parent Class";
+                }
+                welcome() {
+                    return "Welcome " + this.studentname;
+                }
+            }
+
+            class Graduate extends Student {
+                static Message() {
+                    return "Hello from Child Class";
+                }
+                goodbye() {
+                    return "Goodbye " + this.studentname;
+                }
+            }
+
+            let student = new Graduate("Tina");
+
+            document.getElementById("parentStatic").innerHTML = Student.hello();
+            document.getElementById("parentNonStatic").innerHTML = student.welcome();
+            document.getElementById("childStatic").innerHTML = Graduate.Message();
+            document.getElementById("childNonStatic").innerHTML = student.goodbye();
+        </script>
+    </body>
+</html>
