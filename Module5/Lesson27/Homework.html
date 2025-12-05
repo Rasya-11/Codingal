@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1> Javascript Array Map and Sort Homework </h1>
+
+    <button onclick="ascending()"> Ascending Order </button>
+    <button onclick="descending()"> Descending Order </button>
+    <p id="demo"></p>
+    <script>
+        var points = [30, 60, 2, 87, 29];
+        function multiply(num) {
+            return num * 5;
+        }
+        var mappedPoints = points.map(multiply);
+        document.getElementById("demo").innerHTML = mappedPoints;
+
+        function ascending() {
+            mappedPoints.sort(function(a, b) {return a - b;});
+            document.getElementById("demo").innerHTML = mappedPoints;
+        }
+
+        function descending() {
+            mappedPoints.sort(function(a, b) {return b - a;});
+            document.getElementById("demo").innerHTML = mappedPoints;
+        }
+    </script>
+</body>
+</html>
