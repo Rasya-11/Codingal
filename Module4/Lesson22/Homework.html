@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Javascript Sum and Trigonometry Homework</h1>
+        <p id="sum"></p>
+        <p id="trigonometry"></p>
+        <script>
+            function sumNumbers() {
+                var total = 0;
+                for (var i = 0; i < arguments.length; i++) {
+                    total += arguments[i];
+                }
+                return total;
+            }
+            function Trigonometry(num = 0) {
+                var radians = num * (Math.PI / 180);
+                return "For " + num + " degrees: sin = " + Math.sin(radians) +
+                       ", cos = " + Math.cos(radians) +
+                       ", tan = " + Math.tan(radians);
+            }
+            document.getElementById("sum").innerHTML = "Sum of numbers: " + sumNumbers(3, 6, 4, 2);
+            document.getElementById("trigonometry").innerHTML = Trigonometry(30);
+        </script>
+    </body>
+</html>
