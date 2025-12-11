@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>JSON in Javascript </h1>
+    <h2> Convert a Javascript object into a json string and send it to server. </h2>
+    <p id="demo"></p>
+    <script>
+        var myobject = {name:"json",grade:12};
+        var myjson = JSON.stringify(myobject); //converts object to JSON for sending data.
+        var newobject = JSON.parse(myjson); //converts JSON into object while recieving data.
+        document.getElementById("demo").innerHTML = newobject.name;
+    </script>
+  </body>
+</html>

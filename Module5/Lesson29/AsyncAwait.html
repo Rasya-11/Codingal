@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Javascript Async and Await</h1>
+    <p id="demo"></p>
+    <script>
+        async function add(a,b){ //function definition for add function.
+            let response = await a+b;
+            display(response) //function call for display function.
+        }
+        function display(r){ //function defintion for display function.
+            document.getElementById("demo").innerHTML = r;
+        }
+        add(2,3) //function call for add function.
+    </script>
+  </body>
+</html>
