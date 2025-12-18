@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1> Form Validation in Javascript </h1>
+    <form name="MyForm" onsubmit="validateForm()">
+        Name: <input type="text" name="fName">
+        <input type="submit" value="Submit">
+        <p id="message"></p>
+    </form>
+    <script>
+        function validateForm(){
+            var x = document.forms["MyForm"]["fName"].value;
+            if(x == ""){
+                alert("Name must be filled.")
+                return false
+            }
+        }
+    </script>
+  </body>
+</html>

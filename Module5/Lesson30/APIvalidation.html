@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1> Validation using API in Javascript </h1>
+    <p> Enter a number and click okay. If the number is less than 100, or greater than 300 then an error message will be displayed. </p>
+    <input id="id1" type="number" min="100" max="300" required>
+    <button onclick="MyFunction()"> Okay </button>
+    <p id="result"></p>
+    <script>
+        function MyFunction(){
+            var inputObject = document.getElementById("id1");
+            if(!inputObject.checkValidity()){
+                document.getElementById("result").innerHTML = inputObject.validationMessage;
+            }
+            else{
+                document.getElementById("result").innerHTML = "input is okay.";
+            }
+        }
+    </script>
+  </body>
+</html>
