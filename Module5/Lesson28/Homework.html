@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1> JavaScript Error Handling </h1>
+    <p id="demo"></p>
+
+    <script>
+        try {
+            let result = x + 5;
+        }
+        catch (e) {
+            document.getElementById("demo").innerHTML = "Error occurred: "  + e.message;
+        }
+    </script>
+</body>
+</html>
