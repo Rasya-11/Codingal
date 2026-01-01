@@ -1,0 +1,6 @@
+*{margin:0; padding:0;}
+.navbar{background-color:aqua; align-items: center; display:flex; justify-content: space-between; padding:15px;}
+.Logo{font-size: 15px; color:red;}
+.navlinks{display:flex; list-style:none;}
+.navlinks a:hover{color:red;}
+.navlinks li{margin-left:20px;}

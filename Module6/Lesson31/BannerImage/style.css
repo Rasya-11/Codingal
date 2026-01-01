@@ -1,0 +1,10 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url("https://hips.hearstapps.com/hmg-prod/images/close-up-of-beautiful-pink-chrysanthemums-ready-for-royalty-free-image-1728001827.jpg?crop=0.665xw:1.00xh;0.150xw,0");
+  background-attachment: scroll;
+  /* background-size:cover; */
+  background-size: contain;
+  height: 1000px;
+}
