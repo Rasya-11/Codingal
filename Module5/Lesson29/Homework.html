@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Javascript Async and Await</h1>
+    <p id="demo"></p>
+
+    <script>
+        async function add(a, b) {
+            let response = await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(a + b);
+                }, 2000);
+            });
+            display(response);
+        }
+        function display(r) {
+            document.getElementById("demo").innerHTML = r;
+        }
+        add(2, 3);
+    </script>
+  </body>
+</html>
