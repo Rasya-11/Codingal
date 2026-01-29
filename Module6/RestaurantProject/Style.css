@@ -1,14 +1,14 @@
 /* Style the header with a grey background and some padding */
 .header {
   overflow: hidden;
-  background-color: black;
+  background-color: darkslategrey;
   padding: 20px 10px;
 }
 
 /* Style the header links */
 .header a {
   float: left;
-  color: black;
+  color: beige;
   text-align: center;
   padding: 12px;
   text-decoration: none;
@@ -25,14 +25,14 @@
 
 /* Change the background color on mouse-over */
 .header a:hover {
-  background-color: #ddd;
+  background-color: beige;
   color: black;
 }
 
 /* Style the active/current link*/
 .header a.active {
-  background-color: dodgerblue;
-  color: white;
+  background-color: beige;
+  color: black;
 }
 
 /* Float the link section to the right */
@@ -50,4 +50,9 @@
   .header-right {
     float: none;
   }
+}
+
+img{
+  height: 500px;
+  width: 1000px;
 }
