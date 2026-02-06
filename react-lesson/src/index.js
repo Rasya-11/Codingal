@@ -8,11 +8,16 @@ import Activity1 from './Lesson/Activity1';
 import Activity2 from './Lesson/Activity2';
 import Activity1Lesson2 from './LessonComponent/Activity1';
 import Activity2Lesson2 from './LessonComponent/Activity2';
+import Lesson3A1 from './LessonProps/Activity1';
+import Lesson3A2 from './LessonProps/Activity2';
+import Lesson3A3 from './LessonProps/Activity3';
+import Lesson3A4 from './LessonProps/Activity4';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Activity2Lesson2/>
+    <Lesson3A4/>
+    {/* <Activity2Lesson2/> */}
     {/* <Activity3/> */}
     {/* <Activity1/> */}
     {/* <Activity2/> */}
