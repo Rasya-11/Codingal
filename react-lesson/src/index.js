@@ -12,11 +12,13 @@ import Lesson3A1 from './LessonProps/Activity1';
 import Lesson3A2 from './LessonProps/Activity2';
 import Lesson3A3 from './LessonProps/Activity3';
 import Lesson3A4 from './LessonProps/Activity4';
+import Lesson4A1 from './LessonState/Activity1';
+import Lesson4A2 from './LessonState/Activity2';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Lesson3A4/>
+    <Lesson4A2/>
     {/* <Activity2Lesson2/> */}
     {/* <Activity3/> */}
     {/* <Activity1/> */}
