@@ -14,12 +14,15 @@ import Lesson3A3 from './LessonProps/Activity3';
 import Lesson3A4 from './LessonProps/Activity4';
 import Lesson4A1 from './LessonState/Activity1';
 import Lesson4A2 from './LessonState/Activity2';
+import CustomerDetails from './Lesson/Homework';
+import Activity1Lesson5 from './LessonStyle/InlineStyling';
+import Activity2Lesson5 from './LessonStyle/Activity2';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Lesson4A2/>
-    {/* <Activity2Lesson2/> */}
+    <Activity2Lesson5/>
+    {/* <Activity2Lesson5/> */}
     {/* <Activity3/> */}
     {/* <Activity1/> */}
     {/* <Activity2/> */}

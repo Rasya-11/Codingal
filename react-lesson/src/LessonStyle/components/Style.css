@@ -1,0 +1,10 @@
+.headerStyle{
+    color:blue;
+    padding: 8px;
+    background-color: purple;
+}
+
+.pStyle{
+    border: 10px solid green;
+    color: pink;
+}
