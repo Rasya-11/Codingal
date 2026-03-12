@@ -21,12 +21,13 @@ import Lesson3Hw from './LessonProps/Homework';
 import ChocolateShop from './LessonState/Homework';
 import Lesson5Hw from './LessonStyle/Homework';
 import Multiplicator from './LessonMultiplicatorApp/Activity1';
+import LoginForm from './LessonMultiplicatorApp/Homework';
 // import Multiplicator from './LessonMultiplicatorApp/Activity1';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Multiplicator/>
+    <LoginForm/>
     {/* <Activity2Lesson5/> */}
     {/* <Activity3/> */}
     {/* <Activity1/> */}
