@@ -10,4 +10,5 @@ total_marks = maths + science + hindi + english
 print("Total Marks:", total_marks)
 
 percentage = total_marks / 400 * 100
-print("Percentage:", percentage)
+#print("Percentage:", round(percentage,2))
+print(f"Percentage: {percentage:.2f}")
