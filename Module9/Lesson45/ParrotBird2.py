@@ -32,7 +32,3 @@ ob1 = Parrot("Coco",6) # ob1 is an instance of class Parrot, here the instance v
 
 print(ob1.sing("Happy"))
 print(ob1.dance())
-
-#Tuple to List: This project aims to get a clear understanding of Data Strcture in Python - You have
-#been asked to store all your personal details like - First name, Last name, Age, Height, Weight,
-#Favourite subject in a tuple. Your task is to write a Python program to convert this tuple into a list.

@@ -19,8 +19,3 @@ print("Species of object 2 is", ob2.species)
 
 print(ob1.name, "is", ob1.age, "years old.")
 print(ob2.name, "is", ob2.age, "years old.")
-
-#Robot introduction: This project aims to get a clear understanding of Object-Orientated Programming
-#Concepts - Harsh has two robots - Tom and Jerry, which he bought from you, but those robots have some
-#internal problems they cannot introduce their names. So help Harsh in making his robots introduce their
-#names using Classes and Objects, as you have designed those robots.
