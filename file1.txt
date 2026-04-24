@@ -1,0 +1,4 @@
+This is the write method.This is the append method
+Hi
+Hello
+WelcomeThis is file 2.This is file 2.
