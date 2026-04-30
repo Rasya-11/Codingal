@@ -1,1 +1,1 @@
-This is file 2.
+The is the write method.This is the append method.

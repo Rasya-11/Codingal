@@ -1,0 +1,4 @@
+Hello,
+Coding is a very fun subject.
+Coding languages include HTML, CSS, Python and etc.
+Javascript is also a coding language.

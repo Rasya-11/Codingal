@@ -1,0 +1,2 @@
+Hello,
+Javascript is also a coding language.
