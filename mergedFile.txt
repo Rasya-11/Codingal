@@ -1,3 +1,4 @@
+This file was opened using 'with'
 The is the write method.This is the append method.
 
 This is File2
