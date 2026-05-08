@@ -1,6 +1,2 @@
-The is the write method.This is the append method.
-
-This is File2Hello,
-Coding is a very fun subject.
-Coding languages include HTML, CSS, Python and etc.
-Javascript is also a coding language.
+This is the write method.
+This is the append method.

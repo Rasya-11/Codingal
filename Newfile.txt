@@ -1,4 +1,2 @@
-Hello
-Hello
-Hello
+Hello,
 Javascript is also a coding language.
