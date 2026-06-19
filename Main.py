@@ -1,119 +1,58 @@
-import base64
+import base64, io, json
 from io import BytesIO
-
 import streamlit as st
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from groq import Groq
 import config
 
-st.set_page_config(page_title="AI Visionary", page_icon="🕵️", layout="centered")
-
-
-STYLES = {
-
-"Normal": (
-
-"Look at this image carefully and write a clear, detailed report. "
-
-"Describe the scene, objects, and what seems to be happening."
-
-),
-
-"Funny": (
-
-"Look at this image carefully and write a funny image report. "
-
-"Mention objects, details, and make the report playful and humorous, "
-
-"but still describe the image correctly."
-
-),
-
-"Detective": (
-
-"Look at this image like a detective. "
-
-"Write an investigation-style report with clues, observations, and smart deductions."
-
-),
-
-"Dramatic": (
-
-"Look at this image and describe it in a dramatic, cinematic way. "
-
-"Make the report vivid, exciting, and expressive."
-
-),
-
-"Story Mode": (
-
-"Look at this image and write a short story-like scene description. "
-
-"Describe the setting, objects, and mood in a creative way."
-
-),
-
-}
+st.set_page_config(page_title="The AI X-Ray Vision", page_icon="🧪", layout="centered")
 
 client = Groq(api_key=config.GROQ_API_KEY)
+st.session_state.setdefault("xray_outputs", [])
 
-st.title(" : The AI Visionary")
-st.write("Upload an image and let AI create a fun report about it!")
-st.markdown(
-    "Choose an image, pick a report style, and click **Analyse Image**."
-    "The AI will study the image and write a detailed report."
-)
+PROMPT = """Analyze this image and return ONLY valid JSON.
+Identify all clearly visible important objects in the image.
+For each object, return: name, short_label, fun_metadata, confidence, box
+The "box" must use percentages 0 to 100 with x, y, w, h.
+Rules:
+- Include all clearly visible important objects
+- Do not guess hidden or unclear objects
+- If unsure, skip the object
+- Keep labels short and kid-friendly
+- Confidence must be one of: high, medium, low
+- Never identify a real person by name
+- If a person appears, use generic labels like "person", "smiling adult", "child", or "seated person"
+- Do not guess identity, age, profession, or relationship
+- Return JSON only
+Format:
+{"scene_title":"short futuristic title","objects":[{"name":"person","short_label":"smiling adult","fun_metadata":"person detected near the center","confidence":"high","box":{"x":20,"y":10,"w":25,"h":60}}]}"""
 
-def analyze_image(uploaded_file, style):
-    encoded = base64.b64encode(uploaded_file.getvalue()).decode("utf-8")
+PERSON_WORDS = {"person", "adult", "child", "woman", "man", "girl", "boy", "human"}
+SAFE_LABELS = {"person", "smiling adult", "child"}
+
+
+st.title("🧪 The AI X-Ray Visison")
+st.write("Upload a real photo and turn it into AI scanner images.")
+st.markdown("This app scans your image, finds important objects and creates scanner-style images.")
+
+def analyze_image(file):
+    encoded = base64.b64encode(file.getvalue()).decode()
     response = client.chat.completions.create(
         model=config.GROQ_VISION_MODEL,
-        messages=[
-            {
-                "role" : "user",
-                "content": [
-                    {"type": "text", "text": STYLES.get(style, STYLES["Normal"])}
-                    {
-                        "type" : "image_url",
-                        "image url" : {
-                            "url" : f"data:{uploaded_file.type};base64,{encoded}"
-                        },
-                    },
-                ],
-            }
-        ],
-        temperature=0.8,
-        max_completion_tokens=500,
+        messages=[{
+            "role": "user",
+            "content" : [
+                {"type": "text", "text": PROMPT}
+                {"type": "image_url", "image_url": {"url": f"data:{file.type};base64,{encoded}"}}
+            ],
+        }],
+        temperature=0.2,
+        max_completion_tokens=1200
+        response_format={"type": "json_object"},
     )
-    return response.choice[0].message.content
+    return json.loads(response.choices[0].message.content)
 
 
-uploaded_file = st.file_uploader(
-    "Upload an image",
-    type=["png", "jpg", "jpeg", "webp"],
-)
-
-
-report_style = st.selectbox("Choose report style", list(STYLES))
-
-
-if uploaded_file:
-    st.image(
-        Image.open(BytesIO(uploaded_file.getvalue())),
-        caption="Uploaded Image"
-        use_container_width=True,
-    )
-
-if st.button("Analyse Image"):
-    if not config.GROQ_API_KEY:
-        st.error("Groq API key is missing. Please add it to your .env file.")
-    elif not uploaded_file:
-        st.warning("Please upload an image first.")
-    else:
-        with st.spinner("The AI is studying your image..."):
-            try:
-                st.success("Report ready!")
-                st.subheader("AI Report")
-                st.write(analyze_image(uploaded_file, report_style))
-            except Exception as error:
-                st.error(f"Something went wrong: {error}")
+def px(box, w, h):
+    values = [box["x"], box["y"], box["x"] + box["w"], box["y"], box["h"]]
+    return tuple(max(0, min(int(v * s / 100), s - 1)) for v, s in zip(values, (w,h,w,h)))
