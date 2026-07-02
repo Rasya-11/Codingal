@@ -1,106 +1,63 @@
-import base64
-from io import BytesIO
 
+import random
 import streamlit as st
-from PIL import Image
-from groq import Groq
-import config
 
-# App configuration
-st.set_page_config(page_title="AI Visionary", page_icon="🕵️", layout="centered")
-
-# Review styles dictionary matching project requirements
-STYLES = {
-    "Normal": (
-        "Look at this food image carefully and write a clear, detailed culinary report. "
-        "Describe the dish, ingredients, presentation, and overall vibe."
-    ),
-    "Funny": (
-        "Look at this food image carefully and write a funny review. "
-        "Mention elements, plating flaws, and make it highly playful and humorous, "
-        "but still accurately describe the dish."
-    ),
-    "Detective": (
-        "Look at this food image like a culinary detective. "
-        "Write an investigation-style report looking for clues about how it was made, "
-        "freshness observations, and smart chef deductions."
-    ),
-    "Dramatic": (
-        "Look at this food image and describe it in a dramatic, cinematic way. "
-        "Make the flavors sound epic, the plating legendary, and the text expressive."
-    ),
-    "Story Mode": (
-        "Look at this food image and write a short story-like review. "
-        "Set a fictional scene around who is eating it, where they are, and the mood."
-    ),
-}
-
-# Initialize Groq client
-client = Groq(api_key=config.GROQ_API_KEY)
-
-st.title("🍽️ AI Food Image Reviewer")
-st.write("Upload a food photo and let AI create a stylized critique!")
-st.markdown(
-    "Choose an image, pick a review style, and click **Analyse Image**. "
-    "The AI will study the image and write a detailed report."
+from constants import (
+    APP_TITLE, MAX_TRUST, TRUST_TO_OPEN, TRUST_TO_ENTER,
+    RIDDLES, REPEAT_REPLIES,
 )
+from ui import inject_styles, render_hud, render_gate_scene, render_chat_log, render_rules_popup
 
-def analyze_image(uploaded_file, style):
-    # Encode the uploaded image file to base64
-    encoded = base64.b64encode(uploaded_file.getvalue()).decode("utf-8")
-    
-    # Request completion from Groq vision model
-    response = client.chat.completions.create(
-        model=config.GROQ_VISION_MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": STYLES.get(style, STYLES["Normal"])},
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:{uploaded_file.type};base64,{encoded}"
-                        },
-                    },
-                ],
-            }
+# - Import students functions (with safe fallbacks if not done yet) -
+try:
+    from student_logic import analyze_player_tone, get_sentinel_mood, process_player_message, process_riddle_answer
+    _STUDENT_LOADED = True
+except Exception as e:
+    _STUDENT_LOADED = False
+    _LOAD_ERROR = str(e)
+
+st.set_page_config(page_title=APP_TITLE, page_icon="⚔", layout="wide", initial_sidebar_state="collapsed")
+
+# - Session state init -
+def init_state():
+    defaults = {
+        "player_name":          "",
+        "trust_score":          0,
+        "sentinal_mood":        "Suspicous",
+        "riddle": random.choice(RIDDLES),
+        "riddle_solved":        "False",
+        "sentinel_messages":    [
+            "[SYSTEM]: Dimensional breach detected...",
+            "[SENTINEL]: Stope where you are, Traveler...",
         ],
-        temperature=0.8,
-        max_completion_tokens=500,
-    )
-    # Fixed the response access syntax error (.choices[0] instead of choice[0])
-    return response.choices[0].message.content
+        "latest_clue":      "The outer gate is silent, but it is listening.",
+        "streak":           0,
+        "banished":         False,
+        "messages_sent":    0,
+        "player_messages":  [],
+        "rules_accepted":   False,
+    }
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
 
-# File uploader widget
-uploaded_file = st.file_uploader(
-    "Upload a food image",
-    type=["png", "jpg", "jpeg", "webp"],
-)
+f reset_game():
+    for k in list(st.session_state.keys()):
+        del st.session_state[k]
+    init_state()
 
-# Style picker dropdown
-report_style = st.selectbox("Choose review style", list(STYLES))
+f get_phase_label() -> str:
+    t = st.session_state.trust_score
+    if t >= TRUST_TO_ENTER: return "VALUE THRESHOLD"
+    if t >= TRUST_TO_OPEN:  return "GATE OPENING"
+    return "TRUST GATE"
 
-# Display the uploaded image
-if uploaded_file:
-    st.image(
-        Image.open(BytesIO(uploaded_file.getvalue())),
-        caption="Uploaded Image",
-        use_container_width=True,
-    )
-
-# Execution trigger button
-if st.button("Analyse Image"):
-    if not config.GROQ_API_KEY:
-        st.error("Groq API key is missing. Please add it to your .env file.")
-    elif not uploaded_file:
-        st.warning("Please upload an image first.")
-    else:
-        with st.spinner("The AI is studying your dish..."):
-            try:
-                report_content = analyze_image(uploaded_file, report_style)
-                st.success("Report ready!")
-                st.subheader("AI Food Report")
-                st.write(report_content)
-            except Exception as error:
-                st.error(f"Something went wrong: {error}")
+# - Input callbacks -
+f on_msg_change():
+    msg = st.session_state.get("msg_input", "").strip()
+    if msg:
+        if _STUDENT_LOADED:
+            process_player_message(msg)
+        else:
+            st.toast("⚠️Finish student_logic.py first!", icon="⚠️")
+            st.session_state["_clear_msg"] = True
