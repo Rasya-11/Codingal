@@ -60,4 +60,58 @@ f on_msg_change():
             process_player_message(msg)
         else:
             st.toast("⚠️Finish student_logic.py first!", icon="⚠️")
-            st.session_state["_clear_msg"] = True
+        st.session_state["_clear_msg"] = True
+
+def _on_riddle_change():
+    ans = st.session_state.get("riddle_input","").strip()
+    if ans:
+        if _STUDENT_LOADED:
+            process_riddle_answer(ans)
+        else:
+            st.toast("⚠️ Finish student_logic.py first!", icon="⚠️")
+        st.session_state["_clear_riddle"] = True
+
+# - Main -
+de main():
+    inject_styles()
+    init_state()
+    s = st.session_state
+
+    if not s.rules_accepted:
+        render_rules_popup()
+        return
+
+    # Show load error banner if student file has a syntax error
+    if not _STUDENT_LOADED:
+        st.error(f"⚠️ Could not load student_logic.py - fix the error and refresh.\n\n'{_LOAD_ERROR}'")
+
+    render_hud(s.player_name, s.trust_score, s.sentinel_mood, s.streak, get_phase_label())
+
+    # Gate scene
+    latest = s.sentinel_messages[-1] if s.sentinel_messages else "[SENTINEL]: ..."
+    render_gate_scene(s.trust_score, s.sentinel_mood, latest, s.player_name, s.latest_clue)
+
+
+    if s.banished:
+        st.error("☠️ You have been banished. The sentinel remembers your disrespect")
+        if st.button("↺ Try again", key="reset_banish"):
+            reset_game(); st.rerun()
+        return
+
+    st.markdown("<div style="background:rgba(5,9,18,.98);border-top:1px solid rgba(124,92,255,.28);padding:10px 16px 8px;'>", unsafe_allow_html=True)
+            
+            
+    c_name, c_msg, c_send, c_reset = st.columns([1.4, 4, 1, 0.8])
+    with c_name:
+        st.markdown("<div class='lbl'>Traveler Name</div>", unsafe_allow_html=True)
+        n = st.text_input("name", value=s.player_name, placeholder="Your name...",
+                          label_visibility="collapsed", key="name_input")
+        if n != s.player_name: s.player_name = n
+    
+    if s.pop("_clear_msg", False):      st.session_state["msg_input"]       = ""
+    if s.pop("_clear_riddle", False):   st.session_state["riddle_input"]    = ""
+    
+    with c_msg:
+        st.markdown("<div class='lbl'>Message to the sentitnel</div>", unsafe_allow_html=True)
+        st.text_input("msg", placeholder="Speak to the sentinel...",
+                      label_visibility="collapsed", key="msg_input", on_change=_on_msg_change)
