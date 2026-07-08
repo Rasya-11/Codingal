@@ -1,117 +1,74 @@
-
-import random
+import io
+import requests
 import streamlit as st
+from PIL import Image
 
-from constants import (
-    APP_TITLE, MAX_TRUST, TRUST_TO_OPEN, TRUST_TO_ENTER,
-    RIDDLES, REPEAT_REPLIES,
-)
-from ui import inject_styles, render_hud, render_gate_scene, render_chat_log, render_rules_popup
+st.set_page_config(page_title="AI Mountain Scenery Generator", page_icon="🏔️", layout="centered")
 
-# - Import students functions (with safe fallbacks if not done yet) -
-try:
-    from student_logic import analyze_player_tone, get_sentinel_mood, process_player_message, process_riddle_answer
-    _STUDENT_LOADED = True
-except Exception as e:
-    _STUDENT_LOADED = False
-    _LOAD_ERROR = str(e)
+OPTIONS = {
+    "Mountain type": ["Snowy Alps", "Volcanic Peaks", "Rocky Canyons", "Green Highlands", "Mystic Floating Mountains"],
+    "Weather": ["Clear Sky", "Stormy Thunderstorm", "Dense Fog", "Golden Hour Sunshine", "Northern Lights (Aurora)"],
+    "Time of day": ["Sunrise", "Midday", "Sunset", "Midnight", "Twilight"],
+    "Mood": ["Peaceful and Serene", "Epic and Dramatic", "Mysterious and Eerie", "Bright and Cheerful"],
+    "Art style": ["Photorealistic", "Fantasy Oil Painting", "Anime Landscape Style", "Minimalist Vector Art", "Watercolor"]
+}
 
-st.set_page_config(page_title=APP_TITLE, page_icon="⚔", layout="wide", initial_sidebar_state="collapsed")
+st.session_state.setdefault("generated_scenery", None)
 
-# - Session state init -
-def init_state():
-    defaults = {
-        "player_name":          "",
-        "trust_score":          0,
-        "sentinal_mood":        "Suspicous",
-        "riddle": random.choice(RIDDLES),
-        "riddle_solved":        "False",
-        "sentinel_messages":    [
-            "[SYSTEM]: Dimensional breach detected...",
-            "[SENTINEL]: Stope where you are, Traveler...",
-        ],
-        "latest_clue":      "The outer gate is silent, but it is listening.",
-        "streak":           0,
-        "banished":         False,
-        "messages_sent":    0,
-        "player_messages":  [],
-        "rules_accepted":   False,
-    }
-    for k, v in defaults.items():
-        if k not in st.session_state:
-            st.session_state[k] = v
+st.title("🏔️ AI Mountain Scenery Generator")
+st.write("Design breathtaking mountain landscapes using artificial intelligence!")
+st.markdown("Select your preferences below to build your dynamic custom prompt, then click **Generate Scenery**.")
 
-f reset_game():
-    for k in list(st.session_state.keys()):
-        del st.session_state[k]
-    init_state()
+st.subheader("Customize Your Landscape")
 
-f get_phase_label() -> str:
-    t = st.session_state.trust_score
-    if t >= TRUST_TO_ENTER: return "VALUE THRESHOLD"
-    if t >= TRUST_TO_OPEN:  return "GATE OPENING"
-    return "TRUST GATE"
+selections = {}
+for label, items in OPTIONS.items():
+    selections[label] = st.selectbox(f"Choose {label.lower()}", items)
 
-# - Input callbacks -
-f on_msg_change():
-    msg = st.session_state.get("msg_input", "").strip()
-    if msg:
-        if _STUDENT_LOADED:
-            process_player_message(msg)
-        else:
-            st.toast("⚠️Finish student_logic.py first!", icon="⚠️")
-        st.session_state["_clear_msg"] = True
+extra_details = st.text_area(
+    "Extra details", 
+    placeholder="Example: A small wooden cabin by a crystal-clear lake..."
+).strip()
 
-def _on_riddle_change():
-    ans = st.session_state.get("riddle_input","").strip()
-    if ans:
-        if _STUDENT_LOADED:
-            process_riddle_answer(ans)
-        else:
-            st.toast("⚠️ Finish student_logic.py first!", icon="⚠️")
-        st.session_state["_clear_riddle"] = True
+prompt_parts = [
+    f"A breathtaking view of {selections['Mountain type']}",
+    f"with {selections['Weather']}",
+    f"during {selections['Time of day']}",
+    f"creating a {selections['Mood']} atmosphere",
+    f"in {selections['Art style']} art style",
+    "highly detailed, masterpiece, 8k resolution"
+]
+base_prompt = ", ".join(prompt_parts)
+final_prompt = f"{base_prompt}, {extra_details}" if extra_details else base_prompt
 
-# - Main -
-de main():
-    inject_styles()
-    init_state()
-    s = st.session_state
+with st.expander("👀 See the AI prompt"):
+    st.write(final_prompt)
 
-    if not s.rules_accepted:
-        render_rules_popup()
-        return
+if st.button("✨ Generate Scenery"):
+    with st.spinner("Generating your mountain masterpiece..."):
+        try:
+            cleaned_prompt = requests.utils.quote(final_prompt)
+            image_url = f"https://image.pollinations.ai/prompt/{cleaned_prompt}"
+            response = requests.get(image_url, timeout=30)
+            if response.status_code == 200:
+                image = Image.open(io.BytesIO(response.content))
+                st.session_state.generated_scenery = image
+                st.success("Your landscape scenery is ready!")
+            else:
+                st.error(f"Server responded with status code: {response.status_code}")
+        except Exception as e:
+            st.error(f"Something went wrong during generation: {e}")
 
-    # Show load error banner if student file has a syntax error
-    if not _STUDENT_LOADED:
-        st.error(f"⚠️ Could not load student_logic.py - fix the error and refresh.\n\n'{_LOAD_ERROR}'")
+if st.session_state.generated_scenery:
+    st.image(st.session_state.generated_scenery, caption="Your AI Mountain Scenery", use_container_width=True)
+    buffer = io.BytesIO()
+    st.session_state.generated_scenery.save(buffer, format="PNG")
+    st.download_button(
+        label="📥 Download Mountain Scenery",
+        data=buffer.getvalue(),
+        file_name="mountain_scenery.png",
+        mime="image/png"
+    )
 
-    render_hud(s.player_name, s.trust_score, s.sentinel_mood, s.streak, get_phase_label())
-
-    # Gate scene
-    latest = s.sentinel_messages[-1] if s.sentinel_messages else "[SENTINEL]: ..."
-    render_gate_scene(s.trust_score, s.sentinel_mood, latest, s.player_name, s.latest_clue)
-
-
-    if s.banished:
-        st.error("☠️ You have been banished. The sentinel remembers your disrespect")
-        if st.button("↺ Try again", key="reset_banish"):
-            reset_game(); st.rerun()
-        return
-
-    st.markdown("<div style="background:rgba(5,9,18,.98);border-top:1px solid rgba(124,92,255,.28);padding:10px 16px 8px;'>", unsafe_allow_html=True)
-            
-            
-    c_name, c_msg, c_send, c_reset = st.columns([1.4, 4, 1, 0.8])
-    with c_name:
-        st.markdown("<div class='lbl'>Traveler Name</div>", unsafe_allow_html=True)
-        n = st.text_input("name", value=s.player_name, placeholder="Your name...",
-                          label_visibility="collapsed", key="name_input")
-        if n != s.player_name: s.player_name = n
-    
-    if s.pop("_clear_msg", False):      st.session_state["msg_input"]       = ""
-    if s.pop("_clear_riddle", False):   st.session_state["riddle_input"]    = ""
-    
-    with c_msg:
-        st.markdown("<div class='lbl'>Message to the sentitnel</div>", unsafe_allow_html=True)
-        st.text_input("msg", placeholder="Speak to the sentinel...",
-                      label_visibility="collapsed", key="msg_input", on_change=_on_msg_change)
+#cd "c:\Users\Prashant\Desktop\Codingal1\Codingal\Module10\Lesson54\Homework"
+#streamlit run main.py
