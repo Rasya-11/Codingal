@@ -1,23 +1,43 @@
--- Create the Employees table for DXC Company
-CREATE TABLE IF NOT EXISTS Employees (
-    emp_id TEXT PRIMARY KEY,
-    name TEXT,
-    department TEXT,
-    salary REAL,
-    status TEXT
+DROP TABLE IF EXISTS PRODUCT;
+CREATE TABLE IF NOT EXISTS PRODUCT(
+    PRO_ID TEXT PRIMARY KEY,
+    PRO_NAME TEXT,
+    PRO_PRICE INTEGER,
+    PRO_COM TEXT
 );
 
--- Insert sample records, including those under investigation
-INSERT INTO Employees (emp_id, name, department, salary, status) VALUES
-('E101', 'Tarun', 'Management', 85000.0, 'Active'),
-('E102', 'John Doe', 'Finance', 62000.0, 'Suspicious'),
-('E103', 'Jane Smith', 'Sales', 58000.0, 'Active'),
-('E104', 'Alex Lyon', 'Finance', 71000.0, 'Suspicious');
+INSERT INTO PRODUCT(PRO_ID, PRO_NAME, PRO_PRICE, PRO_COM)
+VALUES
+    ("101", "MOTHER BOARD", 3200, "15"),
+    ("102", "KEY BOARD", 450, "16"),
+    ("103", "ZIP DRIVE", 250, "14"),
+    ("104", "SPEAKER", 550, "16"),
+    ("105", "MONITER", 5000, "11"),
+    ("106", "DVD DRIVE", 900, "12"),
+    ("107", "CD DRIVE", 800, "12"),
+    ("108", "PRINTER", 2600, "13"),
+    ("109", "REFILL CARTRIDGE", 350, "13"),
+    ("110", "MOUSE", 250, "12");
 
--- Fetch all employee records to view the dataset
-SELECT * FROM Employees;
+SELECT * FROM PRODUCT 
+WHERE PRO_PRICE >= 500 AND (PRO_COM = "12" OR PRO_COM = "13");
 
--- Fetch details of specific employees involved in the fraud investigation
-SELECT name, department, status 
-FROM Employees 
-WHERE status = 'Suspicious';
+SELECT * FROM PRODUCT 
+WHERE PRO_NAME LIKE '%DRIVE%';
+
+SELECT PRO_NAME, PRO_PRICE
+FROM PRODUCT
+WHERE PRO_PRICE = (SELECT MIN(PRO_PRICE) FROM PRODUCT);
+
+SELECT PRO_NAME, PRO_PRICE
+FROM PRODUCT
+WHERE PRO_PRICE = (SELECT MAX(PRO_PRICE) FROM PRODUCT);
+
+UPDATE PRODUCT
+SET PRO_PRICE = 600
+WHERE PRO_NAME = 'SPEAKER';
+
+DELETE FROM PRODUCT
+WHERE PRO_NAME = 'ZIP DRIVE';
+
+SELECT * FROM PRODUCT;
