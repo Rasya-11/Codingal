@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS Orders;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Salesman;
+
 CREATE TABLE IF NOT EXISTS Salesman (
     Salesman_id TEXT PRIMARY KEY,
     name TEXT,
@@ -69,7 +73,8 @@ Customer.city AS "City",
 Salesman.name AS "Salesman",
 Salesman.comission
 FROM Customer
-JOIN Salesman ON Customer.Salesman_id = Salesman_id
+JOIN Salesman
+ON Customer.Salesman_id = Salesman.Salesman_id
 WHERE Salesman.comission BETWEEN 0.12 AND 0.14;
 
 
