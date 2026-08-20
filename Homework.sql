@@ -1,33 +1,36 @@
-DROP TABLE IF EXISTS marine_observation;
-CREATE TABLE IF NOT EXISTS marine_observation (
-    observation_id       INTEGER PRIMARY KEY,
-    animal_group         TEXT    NOT NULL,
-    habitat              TEXT    NOT NULL,
-    estimated_weight_kg  REAL    NOT NULL,
-    depth_meters         REAL    NOT NULL
+DROP TABLE IF EXISTS employee;
+CREATE TABLE IF NOT EXISTS employee (
+    employee_id   INTEGER PRIMARY KEY,
+    name          TEXT    NOT NULL,
+    department    TEXT    NOT NULL,
+    salary        REAL    NOT NULL,
+    hire_date     TEXT    NOT NULL,
+    performance_rating REAL
 );
 
-INSERT INTO marine_observation VALUES (1, 'Whale',   'Open Ocean', 40000.0, 150.0);
-INSERT INTO marine_observation VALUES (2, 'Shark',   'Coral Reef',  600.0,   30.0);
-INSERT INTO marine_observation VALUES (3, 'Dolphin', 'Coastal',     250.0,   15.0);
-INSERT INTO marine_observation VALUES (4, 'Whale',   'Deep Sea',   35000.0, 800.0);
-INSERT INTO marine_observation VALUES (5, 'Turtle',  'Coral Reef',  120.0,   12.0);
-INSERT INTO marine_observation VALUES (6, 'Shark',   'Open Ocean',  900.0,   60.0);
-INSERT INTO marine_observation VALUES (7, 'Octopus', 'Deep Sea',    25.0,    900.0);
-INSERT INTO marine_observation VALUES (8, 'Dolphin', 'Open Ocean',  300.0,   40.0);
+INSERT INTO employee VALUES (1, 'Alice Smith',   'Engineering', 85000.00,  '2021-03-15', 4.5);
+INSERT INTO employee VALUES (2, 'Bob Jones',     'Marketing',   62000.00,  '2022-06-01', 3.8);
+INSERT INTO employee VALUES (3, 'Charlie Brown', 'Engineering', 95000.00,  '2020-01-10', 4.8);
+INSERT INTO employee VALUES (4, 'Diana Prince', 'Finance',     78000.00,  '2023-02-28', 4.2);
+INSERT INTO employee VALUES (5, 'Evan Wright',   'Marketing',   58000.00,  '2024-01-15', 3.5);
+INSERT INTO employee VALUES (6, 'Fiona Gallagher','HR',         55000.00,  '2021-11-01', 4.0);
+INSERT INTO employee VALUES (7, 'George Clark',  'Finance',     82000.00,  '2019-07-22', 4.7);
+INSERT INTO employee VALUES (8, 'Hannah Abbott', 'HR',         52000.00,  '2023-08-14', 3.9);
 
-SELECT * FROM marine_observation;
-SELECT DISTINCT animal_group FROM marine_observation;
-SELECT COUNT(DISTINCT animal_group) AS unique_groups FROM marine_observation;
-SELECT COUNT(observation_id) AS total_observations FROM marine_observation;
-SELECT COUNT(observation_id) AS coral_reef_observations 
-FROM marine_observation 
-WHERE habitat = 'Coral Reef';
-SELECT SUM(estimated_weight_kg) AS total_weight_kg FROM marine_observation;
-SELECT AVG(depth_meters) AS avg_depth_meters FROM marine_observation;
-SELECT
-    COUNT(observation_id)        AS total_observations,
-    COUNT(DISTINCT animal_group) AS unique_groups,
-    SUM(estimated_weight_kg)     AS total_weight_kg,
-    AVG(depth_meters)            AS avg_depth_meters
-FROM marine_observation;
+SELECT * FROM employee;
+UPDATE employee SET salary = 65000.00 WHERE employee_id = 2;
+SELECT name, salary FROM employee ORDER BY salary DESC;
+SELECT name, department, hire_date FROM employee ORDER BY department ASC, hire_date DESC;
+SELECT name, salary FROM employee ORDER BY salary DESC LIMIT 3;
+SELECT name, department, salary FROM employee WHERE department = 'Engineering';
+SELECT name, salary FROM employee WHERE salary >= 70000.00 AND performance_rating >= 4.0;
+SELECT department, COUNT(*) AS employee_count FROM employee GROUP BY department;
+
+SELECT department, SUM(salary) AS total_payroll, AVG(salary) AS avg_salary
+FROM employee
+GROUP BY department;
+
+SELECT department, AVG(salary) AS avg_salary
+FROM employee
+GROUP BY department
+HAVING AVG(salary) >= 65000.00;
