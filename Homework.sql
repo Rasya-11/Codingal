@@ -1,36 +1,36 @@
-DROP TABLE IF EXISTS employee;
-CREATE TABLE IF NOT EXISTS employee (
-    employee_id   INTEGER PRIMARY KEY,
+DROP TABLE IF EXISTS company_customer;
+CREATE TABLE IF NOT EXISTS company_customer (
+    customer_id   INTEGER PRIMARY KEY,
     name          TEXT    NOT NULL,
-    department    TEXT    NOT NULL,
-    salary        REAL    NOT NULL,
-    hire_date     TEXT    NOT NULL,
-    performance_rating REAL
+    product_line  TEXT    NOT NULL,
+    export_country TEXT   NOT NULL,
+    order_value    REAL    NOT NULL
 );
 
-INSERT INTO employee VALUES (1, 'Alice Smith',   'Engineering', 85000.00,  '2021-03-15', 4.5);
-INSERT INTO employee VALUES (2, 'Bob Jones',     'Marketing',   62000.00,  '2022-06-01', 3.8);
-INSERT INTO employee VALUES (3, 'Charlie Brown', 'Engineering', 95000.00,  '2020-01-10', 4.8);
-INSERT INTO employee VALUES (4, 'Diana Prince', 'Finance',     78000.00,  '2023-02-28', 4.2);
-INSERT INTO employee VALUES (5, 'Evan Wright',   'Marketing',   58000.00,  '2024-01-15', 3.5);
-INSERT INTO employee VALUES (6, 'Fiona Gallagher','HR',         55000.00,  '2021-11-01', 4.0);
-INSERT INTO employee VALUES (7, 'George Clark',  'Finance',     82000.00,  '2019-07-22', 4.7);
-INSERT INTO employee VALUES (8, 'Hannah Abbott', 'HR',         52000.00,  '2023-08-14', 3.9);
+INSERT INTO company_customer VALUES (1, 'Albert Ross',     'Electronics', 'Canada',        12500.00);
+INSERT INTO company_customer VALUES (2, 'Amanda Torres',   'Furniture',   'Mexico',         8400.00);
+INSERT INTO company_customer VALUES (3, 'Aaron Morgan',    'Electronics', 'United Kingdom',21000.00);
+INSERT INTO company_customer VALUES (4, 'Arthur Pendelton','Clothing',    'Australia',      4300.00);
+INSERT INTO company_customer VALUES (5, 'Carlos Orton',    'Furniture',   'Canada',         9200.00);
+INSERT INTO company_customer VALUES (6, 'Anna Jordan',     'Clothing',    'Germany',        6100.00);
+INSERT INTO company_customer VALUES (7, 'Robert Taylor',   'Electronics', 'Mexico',        15500.00);
+INSERT INTO company_customer VALUES (8, 'Alice Gregory',   'Leisure',     'United Kingdom', 3200.00);
 
-SELECT * FROM employee;
-UPDATE employee SET salary = 65000.00 WHERE employee_id = 2;
-SELECT name, salary FROM employee ORDER BY salary DESC;
-SELECT name, department, hire_date FROM employee ORDER BY department ASC, hire_date DESC;
-SELECT name, salary FROM employee ORDER BY salary DESC LIMIT 3;
-SELECT name, department, salary FROM employee WHERE department = 'Engineering';
-SELECT name, salary FROM employee WHERE salary >= 70000.00 AND performance_rating >= 4.0;
-SELECT department, COUNT(*) AS employee_count FROM employee GROUP BY department;
+SELECT DISTINCT product_line FROM company_customer;
+SELECT DISTINCT export_country FROM company_customer;
+SELECT * FROM company_customer WHERE name LIKE 'A%';
+SELECT * FROM company_customer WHERE name LIKE '%or%';
+SELECT * FROM company_customer WHERE product_line = 'Electronics';
+SELECT * FROM company_customer WHERE order_value >= 10000.00;
+SELECT * FROM company_customer WHERE export_country IN ('Canada', 'Mexico', 'United Kingdom');
 
-SELECT department, SUM(salary) AS total_payroll, AVG(salary) AS avg_salary
-FROM employee
-GROUP BY department;
+SELECT product_line, COUNT(*) AS customer_count, SUM(order_value) AS total_sales
+FROM company_customer
+GROUP BY product_line;
 
-SELECT department, AVG(salary) AS avg_salary
-FROM employee
-GROUP BY department
-HAVING AVG(salary) >= 65000.00;
+SELECT export_country, AVG(order_value) AS avg_order_value
+FROM company_customer
+GROUP BY export_country
+HAVING AVG(order_value) >= 8000.00;
+
+SELECT * FROM company_customer ORDER BY order_value DESC LIMIT 4;
