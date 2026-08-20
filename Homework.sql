@@ -1,43 +1,39 @@
-DROP TABLE IF EXISTS PRODUCT;
-CREATE TABLE IF NOT EXISTS PRODUCT(
-    PRO_ID TEXT PRIMARY KEY,
-    PRO_NAME TEXT,
-    PRO_PRICE INTEGER,
-    PRO_COM TEXT
+DROP TABLE IF EXISTS community_activity;
+CREATE TABLE IF NOT EXISTS community_activity (
+    activity_id    INTEGER PRIMARY KEY,
+    name           TEXT    NOT NULL,
+    activity_type  TEXT    NOT NULL,
+    rating         REAL    NOT NULL,
+    participants   INTEGER NOT NULL,
+    duration_mins  INTEGER NOT NULL
 );
 
-INSERT INTO PRODUCT(PRO_ID, PRO_NAME, PRO_PRICE, PRO_COM)
-VALUES
-    ("101", "MOTHER BOARD", 3200, "15"),
-    ("102", "KEY BOARD", 450, "16"),
-    ("103", "ZIP DRIVE", 250, "14"),
-    ("104", "SPEAKER", 550, "16"),
-    ("105", "MONITER", 5000, "11"),
-    ("106", "DVD DRIVE", 900, "12"),
-    ("107", "CD DRIVE", 800, "12"),
-    ("108", "PRINTER", 2600, "13"),
-    ("109", "REFILL CARTRIDGE", 350, "13"),
-    ("110", "MOUSE", 250, "12");
+INSERT INTO community_activity VALUES (1, 'Yoga Flow',         'Fitness',  9.2, 15, 60);
+INSERT INTO community_activity VALUES (2, 'Oil Painting',      'Arts',     8.5, 8,  90);
+INSERT INTO community_activity VALUES (3, 'Beginner Pottery',  'Arts',     7.8, 6,  120);
+INSERT INTO community_activity VALUES (4, 'HIIT Workout',      'Fitness',  9.5, 20, 45);
+INSERT INTO community_activity VALUES (5, 'Zumba Dance',       'Fitness',  8.1, 25, 60);
+INSERT INTO community_activity VALUES (6, 'Chess Club',        'Leisure',  7.2, 12, 90);
+INSERT INTO community_activity VALUES (7, 'Watercolor Basics', 'Arts',     8.9, 10, 90);
+INSERT INTO community_activity VALUES (8, 'Baking Workshop',   'Leisure',  9.0, 14, 150);
 
-SELECT * FROM PRODUCT 
-WHERE PRO_PRICE >= 500 AND (PRO_COM = "12" OR PRO_COM = "13");
+SELECT * FROM community_activity;
+SELECT name, rating FROM community_activity ORDER BY rating ASC;
+SELECT name, rating FROM community_activity ORDER BY rating DESC;
+SELECT name, activity_type, rating FROM community_activity ORDER BY activity_type ASC, rating DESC;
+SELECT name, rating FROM community_activity ORDER BY rating DESC LIMIT 3;
+SELECT name, duration_mins FROM community_activity ORDER BY duration_mins ASC LIMIT 5;
+SELECT activity_type, COUNT(*) AS activity_count FROM community_activity GROUP BY activity_type;
+SELECT activity_type, SUM(participants) AS total_participants, AVG(rating) AS avg_rating
+FROM community_activity
+GROUP BY activity_type;
 
-SELECT * FROM PRODUCT 
-WHERE PRO_NAME LIKE '%DRIVE%';
+SELECT activity_type, COUNT(*) AS activity_count
+FROM community_activity
+GROUP BY activity_type
+HAVING COUNT(*) > 2;
 
-SELECT PRO_NAME, PRO_PRICE
-FROM PRODUCT
-WHERE PRO_PRICE = (SELECT MIN(PRO_PRICE) FROM PRODUCT);
-
-SELECT PRO_NAME, PRO_PRICE
-FROM PRODUCT
-WHERE PRO_PRICE = (SELECT MAX(PRO_PRICE) FROM PRODUCT);
-
-UPDATE PRODUCT
-SET PRO_PRICE = 600
-WHERE PRO_NAME = 'SPEAKER';
-
-DELETE FROM PRODUCT
-WHERE PRO_NAME = 'ZIP DRIVE';
-
-SELECT * FROM PRODUCT;
+SELECT activity_type, AVG(rating) AS avg_rating
+FROM community_activity
+GROUP BY activity_type
+HAVING AVG(rating) >= 8.5;
