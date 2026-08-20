@@ -1,39 +1,33 @@
-DROP TABLE IF EXISTS community_activity;
-CREATE TABLE IF NOT EXISTS community_activity (
-    activity_id    INTEGER PRIMARY KEY,
-    name           TEXT    NOT NULL,
-    activity_type  TEXT    NOT NULL,
-    rating         REAL    NOT NULL,
-    participants   INTEGER NOT NULL,
-    duration_mins  INTEGER NOT NULL
+DROP TABLE IF EXISTS marine_observation;
+CREATE TABLE IF NOT EXISTS marine_observation (
+    observation_id       INTEGER PRIMARY KEY,
+    animal_group         TEXT    NOT NULL,
+    habitat              TEXT    NOT NULL,
+    estimated_weight_kg  REAL    NOT NULL,
+    depth_meters         REAL    NOT NULL
 );
 
-INSERT INTO community_activity VALUES (1, 'Yoga Flow',         'Fitness',  9.2, 15, 60);
-INSERT INTO community_activity VALUES (2, 'Oil Painting',      'Arts',     8.5, 8,  90);
-INSERT INTO community_activity VALUES (3, 'Beginner Pottery',  'Arts',     7.8, 6,  120);
-INSERT INTO community_activity VALUES (4, 'HIIT Workout',      'Fitness',  9.5, 20, 45);
-INSERT INTO community_activity VALUES (5, 'Zumba Dance',       'Fitness',  8.1, 25, 60);
-INSERT INTO community_activity VALUES (6, 'Chess Club',        'Leisure',  7.2, 12, 90);
-INSERT INTO community_activity VALUES (7, 'Watercolor Basics', 'Arts',     8.9, 10, 90);
-INSERT INTO community_activity VALUES (8, 'Baking Workshop',   'Leisure',  9.0, 14, 150);
+INSERT INTO marine_observation VALUES (1, 'Whale',   'Open Ocean', 40000.0, 150.0);
+INSERT INTO marine_observation VALUES (2, 'Shark',   'Coral Reef',  600.0,   30.0);
+INSERT INTO marine_observation VALUES (3, 'Dolphin', 'Coastal',     250.0,   15.0);
+INSERT INTO marine_observation VALUES (4, 'Whale',   'Deep Sea',   35000.0, 800.0);
+INSERT INTO marine_observation VALUES (5, 'Turtle',  'Coral Reef',  120.0,   12.0);
+INSERT INTO marine_observation VALUES (6, 'Shark',   'Open Ocean',  900.0,   60.0);
+INSERT INTO marine_observation VALUES (7, 'Octopus', 'Deep Sea',    25.0,    900.0);
+INSERT INTO marine_observation VALUES (8, 'Dolphin', 'Open Ocean',  300.0,   40.0);
 
-SELECT * FROM community_activity;
-SELECT name, rating FROM community_activity ORDER BY rating ASC;
-SELECT name, rating FROM community_activity ORDER BY rating DESC;
-SELECT name, activity_type, rating FROM community_activity ORDER BY activity_type ASC, rating DESC;
-SELECT name, rating FROM community_activity ORDER BY rating DESC LIMIT 3;
-SELECT name, duration_mins FROM community_activity ORDER BY duration_mins ASC LIMIT 5;
-SELECT activity_type, COUNT(*) AS activity_count FROM community_activity GROUP BY activity_type;
-SELECT activity_type, SUM(participants) AS total_participants, AVG(rating) AS avg_rating
-FROM community_activity
-GROUP BY activity_type;
-
-SELECT activity_type, COUNT(*) AS activity_count
-FROM community_activity
-GROUP BY activity_type
-HAVING COUNT(*) > 2;
-
-SELECT activity_type, AVG(rating) AS avg_rating
-FROM community_activity
-GROUP BY activity_type
-HAVING AVG(rating) >= 8.5;
+SELECT * FROM marine_observation;
+SELECT DISTINCT animal_group FROM marine_observation;
+SELECT COUNT(DISTINCT animal_group) AS unique_groups FROM marine_observation;
+SELECT COUNT(observation_id) AS total_observations FROM marine_observation;
+SELECT COUNT(observation_id) AS coral_reef_observations 
+FROM marine_observation 
+WHERE habitat = 'Coral Reef';
+SELECT SUM(estimated_weight_kg) AS total_weight_kg FROM marine_observation;
+SELECT AVG(depth_meters) AS avg_depth_meters FROM marine_observation;
+SELECT
+    COUNT(observation_id)        AS total_observations,
+    COUNT(DISTINCT animal_group) AS unique_groups,
+    SUM(estimated_weight_kg)     AS total_weight_kg,
+    AVG(depth_meters)            AS avg_depth_meters
+FROM marine_observation;
