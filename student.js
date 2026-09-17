@@ -1,160 +1,106 @@
 // ============================================================
-//  LESSON 4 — The Kinetic Engine: Movement & Player State
-//  ✏️  Write your code in each function below.
-//  Do NOT modify engine.js or App.jsx
-//
-//  Your code here will be carried forward into Lesson 5 & 6.
+//  LESSON 6 — The Boss Battle & Victory Export
+//  YOUR TASK: Complete the functions below.
+//  DO NOT modify engine.js or index.html
 // ============================================================
 
-import { TILE_S, WORLD_W, WORLD_H, isWalkable, speedMult, T } from './engine.js'
-
 // ── TASK 1 ───────────────────────────────────────────────────
-export function createPlayer(startX, startY)
+// createBoss()
+// Returns a boss object with name, hp, maxHp, atk, phase (1), and alive (true).
+// Use BOSS_PHASES[1] for initial stats.
+
+export function createBossFight() {
   return {
-    x: startX,
-    y: startY,
-    hp: 120,
-    maxHp: 120,
-    stamina: 100,
-    maxStamina: 100,
-    xp: 0,
-    level: 1,
-    gold: 0,
-    potions: 3,
-    kills: 0,
-    state: 'idle',
-    dir: 'down',
-    facingDir: 'right',
-    comboCount: 0,
-    invicible: 0,
-    attackCd: 0,
-    dodgeCd: 0,
-    score: 0,
+    entity: {
+      name: 'Demon Overlord',
+      x: 0,
+      y: 0,
+      hp: BOSS_HP,
+      maxHp: BOSS_HP,
+      alive: true,
+    },
+    phase: 1,
+    phaseTimer: 0,
   }
-// Build and return the player object.
-// startX, startY are pixel coordinates.
-//
-// Required fields:
-//   x, y               — use startX, startY
-//   hp, maxHp          — 120
-//   stamina, maxStamina — 100
-//   xp, level          — 0, 1
-//   gold               — 0
-//   potions            — 3
-//   kills              — 0
-//   state              — 'idle'
-//   dir                — 'down'
-//   facingDir          — 'right'
-//   comboCount         — 0
-//   invincible         — 0
-//   attackCd           — 0
-//   dodgeCd            — 0
-//   score              — 0
-
-// export function createPlayer(startX, startY) {
-  // ✏️ YOUR CODE HERE
-
-// }
+}
 
 // ── TASK 2 ───────────────────────────────────────────────────
-// movePlayer(player, direction, tiles)
-// Move the player one tile in the given direction.
-// direction: 'up' | 'down' | 'left' | 'right'
-//
-// Steps:
-//   1. Calculate new x/y by ±TILE_S
-//   2. Tile coords: tx = Math.floor(newX / TILE_S)
-//   3. Block if out of bounds (tx < 0 || tx >= WORLD_W etc.)
-//   4. Block if !isWalkable(tiles[ty][tx])
-//   5. Update dir, facingDir ('left' if moving left, else 'right')
-//   6. Set state = 'walking'
-//   7. Return { ...player, x, y, dir, facingDir, state }
+// checkPhaseTransition(boss)
+// Boss transitions to the next phase when HP drops below a threshold:
+//   Phase 1 → Phase 2 when hp < maxHp * 0.66
+//   Phase 2 → Phase 3 when hp < maxHp * 0.33
+// When transitioning, update boss.phase and boss.atk from BOSS_PHASES[newPhase].
+// Returns { boss, transitioned, newPhase }
 
-export function movePlayer(player, direction, tiles) {
-  let newX = player.x
-  let newY = player.y
+export function checkPhaseTransition(bossFight) {
+  const { enitity, phase } = bossFight
+  const pct = entity.hp / entity.maxHp
 
-  if (direction === 'up') newY -= TILE_S
-  if (direction === 'down') newY += TILE_S
-  if (direction === 'left') newX -= TILE_S
-  if (direction === 'right') newX += TILE_S
-
-  const tx = Math.floor(newX / TILE_S)
-  const ty = Math.floor(newY / TILE_S)
-
-  if (tx < 0 || tx >= WORLD_W || ty < 0 || ty >= WORLD_H) return player
-  if (!isWalkable(tiles[ty][tx])) return player
-
-  const facingDir = direction === 'left' ? 'left' : 'right'
-  return { ...player, x: newX, Y=newY, dir: direction, facingDir, state: 'walking'  }
+  if (phase < 2 && pct < 0.66) {
+    return {
+      bossFight: { ...bossFight, phase: 2, phaseTimer: 0 },
+      transistioned: true,
+      newPhase: 2,
+    }
+  }
+  if (phase < 3 && pct < 0.33) {
+    return {
+      bossFight: { ...bossFight, phase: 3, phaseTimer: 0 },
+      transistioned: true,
+      newPhase: 3,
+    }
+  }
+  return { bossFight, transistioned: false, newPhase: phase }
 }
 
 // ── TASK 3 ───────────────────────────────────────────────────
-// getSpeedMultiplier(player, tiles)
-// Return the terrain speed multiplier for the player's tile.
-// Use speedMult(tileType) from engine.js.
-//
-// Steps:
-//   1. tx = Math.floor(player.x / TILE_S), ty = Math.floor(player.y / TILE_S)
-//   2. Return 1.0 if out of bounds
-//   3. Return speedMult(tiles[ty][tx])
-//
-// Reference: PATH=1.18, GRASS=1.0, TALL_GRASS=0.85,
-//            FOREST=0.72, SNOW=0.78, SHALLOW=0.5
+// generateVictoryReport(player, boss, turns)
+// Called when the boss is defeated.
+// Returns an object with:
+//   { winner, bossName, turnsToWin, goldEarned, xpEarned, rank }
+// rank is: 'S' if turns <= 5, 'A' if <= 10, 'B' if <= 20, 'C' otherwise
+// goldEarned = 150 + (20 - turns) * 5 (min 50)
+// xpEarned = 300
 
-export function getSpeedMultiplier(player, tiles) {
-  const tx = Math.floor(player.x / TILE_S)
-  const ty = Math.floor(player.y / TILE_S)
-  if (tx < 0 || tx >= WORLD_W || ty < 0 || ty >= WORLD_H) return 1.0
-  return speedMult(tiles[ty][tx])
+export function attackBoss(player, bossFight) {
+  const newCombo = (player.comboCount + 1) % 4
+  const isBig = newcombo === 3
+  const damage = 14 + player.level * 4 + (isBig ? 30 : 0) + Math.floor(Math.random() * 10)
+  const newHp = Math.max(0, bossFight.entity.hp - damage)
+  const killed = newHp <= 0
+  let p = { ...player, comboCount: newCombo }
+  const newEntity = { ...bossFight.enitity, hp: newHp, alive: !killed }
+  if (killed) {
+    p.xp    += 300
+    p.gold  += 150
+    p.score += 5000
+  }
+  return {
+    player: p,
+    bossFight: { ...bossFight, entity: newEntity },
+    damage,
+    killed,
+    isBig,
+  }
 }
+
 
 // ── TASK 4 ───────────────────────────────────────────────────
-// collectItem(player, item)
-// Apply item effect and return a message.
-//
-//   'coin'   → player.gold += 10  → message: '💰 +10 gold'
-//   'potion' → player.potions += 1 → message: '🧪 +1 potion'
-//
-// Returns: { player, message }
+// playerComboAttack(player, boss, comboCount)
+// comboCount is how many times the player has attacked in a row (1, 2, 3...).
+// Damage = player.atk * comboCount (combo multiplier).
+// If comboCount >= 3, it's a FINISHER — deal double damage.
+// Returns { boss, damage, isFinisher }
 
-export function collectItem(player, item) {
-  if (item.type === 'coin') {
-    return { player: { ...player, gold: player.gold + 10 }, message: '💰 +10 gold'  }
+export function generativeVictoryReport(player, bossFight, turns) {
+  const rank = turns <= 5 ? 'S' :  turns <= 10 ? 'A' : turns <= 20 ? 'B' : 'C'
+  return {
+    winner: 'Hero',
+    bossName: bossFight.entity.name,
+    turnsToWin: turns,
+    goldEarned: player.gold,
+    xpEarned: 300,
+    rank,
+    score: 5000,
   }
-  if (item.type === 'potion') {
-    return { player: { ...player, potions: player.potions +1 }, message: '🧪 +1 potion'  } 
-  }
-  return { player, message: '' }
-}
-
-// ── TASK 5 ───────────────────────────────────────────────────
-// checkLevelUp(player)
-// Level up if player.xp >= player.level * 150
-//
-// On level up:
-//   level += 1
-//   xp -= threshold
-//   maxHp += 12,  hp = maxHp
-//   maxStamina += 5, stamina = maxStamina
-//
-// Returns: { player, leveledUp }
-
-export function checkLevelUp(player) {
-  const threshold = player.level * 150
-  if (player.xp >= threshold) {
-    return {
-      player: {
-        ...player,
-        level: player.level + 1,
-        xp: player.xp - threshold,
-        maxHp: player.maxHp + 12,
-        hp: player.maxHp + 12,
-        maxStamina: player.maxStamina + 5,
-        stamina: player.maxStamina + 5,
-      },
-      leveledUp: true,
-    }
-  }
-  return { player, leveledUp: false }
 }
