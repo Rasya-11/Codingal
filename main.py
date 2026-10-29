@@ -1,54 +1,47 @@
-from flask import Flask, render_template, request
-import json
-import urllib.request
-from urllib.parse import quote
+import os
+from pathlib import Path
+from groq import Groq
+from dotenv import load_dotenv
+from generator import generate_answer
+from verifier import verify_answer
 
-app = Flask(__name__)
 
-def fetch_json(url):
-    with urllib.request.urlopen(url) as response:
-        return json.loads(response.read().decode("utf-8"))
+def main():
+    print("=" * 40)
+    print("AI GENERATION WITH VERIFICATION")
+    print("=" * 40)
 
-@app.route("/getweather", methods=["POST", "GET"])
-def weather():
-    location = request.form.get("city", "").strip() if request.method == "POST" else "Chennai"
-    if not location:
-        return render_template("index.html", error="Please enter a city name.")
+    question = input("\nEnter your question: ").strip()
 
+    if not question:
+        print("Please enter a question.")
+        return
+    
     try:
-        geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={quote(location)}&count=1&language=en&format=json"
-        geo_data = fetch_json(geo_url)
+        print("\nGenerating answe...")
 
-        if not geo_data.get("results"):
-            return render_template("index.html", error="City not found. Try another one")
+        answer = generate_answer(question)
 
-        place = geo_data["results"][0]
-        lat = place["latitude"]
-        lon = place["longitude"]
+        print("\nAI Generated Answer:")
+        print(answer)
 
-        city_name=place.get("name", location)
-        country_code = place.get("country_code", "").upper()
+        print("\nVerifying answer...")
 
-        weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
-        weather_data = fetch_json(weather_url)
+        is_valid, message = verify_answer(answer)
 
-        current_weather = weather_data.get("current_weather", {})
-        temp_C = current_weather.get("temperature")
+        print("\nVerification Result:", message)
 
-        data = {
-            "country_code": country_code if country_code else "N/A",
-            "temp": f"{temp_c} °C" if temp_c is not None else "N/A",
-            "location": city_name, 
-        }
+        if is_valid:
+            print("\nFinal Verified Output:")
+            print(answer)
+        else:
+            print("\nAnswer rejected.")
+            print("Please try again.")
 
-        return render_template("index.html", data=data)
+    except Exception as error:
+        print("\nAn error occurred:")
 
-    except Exception:
-        return render_template("index.html", error="Something went wrong. Please try again.")
 
-@app.route("/")
-def index():
-    return render_template("index.html")
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    main()
