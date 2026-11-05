@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sneaker Store</title>
+</head>
+<body>
+    <h1>Sneaker Store</h1>
+    <button onclick="loadSneakers()">View Sneakers</button>
+    <div id="result"></div>
+    <h2>Add new Sneaker</h2>
+    <input type="text" id="name" placeholder="Sneaker Name">
+    <input type="text" id="brand" placeholder="Brand">
+    <input type="number" id="price" placeholder="Price">
+    <button onclick="addSneaker()">Add Sneaker</button>
+    <Script>
+        function loadSneakers() {
+            fetch('/sneakers')
+                .then(response => response.json())
+                .then(data => {
+                    let output = "";
+                    data.forEach(sneaker => {
+                        output += `
+                        <h3>${sneaker.name}</h3>
+                        <p>Brand: ${sneaker.brand}</p>
+                        <p>Price: ₹${sneaker.price}</p>
+                    `;
+                    });
+
+                    document.getElementById("result").innerHTML = output;
+                    });
+            }
+            function addSneaker() {
+                let sneaker = {
+                    name: document.getElementById("name").value,
+                    brand: document.getElementById("brand").value,
+                    price: Number(document.getElementById("price").value)
+                };
+                fetch('/sneakers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sneaker)   })
+                    .then(response => response.json())
+                    .then(data => {
+                    alert("Sneaker Added Successfully!");
+                    loadSneakers();
+                    });
+            }
+    </Script>
+</body>
+</html>
